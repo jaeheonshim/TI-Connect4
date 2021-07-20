@@ -5,6 +5,9 @@
 
 #define TRANSFORM_COUNT (sizeof transforms / (sizeof(int) * 2))
 
+#define MAX 1000
+#define MIN -1000
+
 static const int transforms[][2] = {
     {0, 1},
     {1, 0},
@@ -22,7 +25,7 @@ int placeable(char **board, int row, int col, int color);
 
 int c_findbestmove(char **board, int depth, int player) {
     int bestCol = 0;
-    int maxVal = INT_MIN;
+    int maxVal = MIN;
 
     for(int i = 0; i < C_WIDTH; i++) {
         if(c_canplace(board, i)) {
@@ -49,7 +52,7 @@ int c_minimax(char **board, int depth, int maximizing, int player) {
     }
 
     if(maximizing) {
-        int max = INT_MIN;
+        int max = MIN;
         for(int i = 0; i < C_WIDTH; i++) {
             if(c_canplace(board, i)) {
                 char **copyboard = c_copyboard(board);
@@ -65,7 +68,7 @@ int c_minimax(char **board, int depth, int maximizing, int player) {
         return max;
     } else {
         // assuming opponent plays optimally, if they don't they're fucked anyway
-        int min = INT_MAX;
+        int min = MAX;
         for(int i = 0; i < C_WIDTH; i++) {
             if(c_canplace(board, i)) {
                 char **copyboard = c_copyboard(board);
@@ -88,8 +91,8 @@ int c_evalpos(char **board, int evaluator) {
     int winner;
 
     if((winner = c_getwinner(board)) != 0) {
-        if(winner == evaluator) return INT_MAX;
-        else return INT_MIN;
+        if(winner == evaluator) return MAX;
+        else return MIN;
     }
 
     int tRow, tCol, i, color;

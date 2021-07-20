@@ -63,7 +63,7 @@ _loop:
 	call	_c_nexttoken
 	pop	de
 	push	hl
-	ld	hl, 2
+	ld	hl, 1
 	push	hl
 	ld	hl, (ix + -3)
 	push	hl

@@ -36,6 +36,7 @@ void loop() {
     if((digitInput = getDigitInput()) != -1 && digitInput != lastInput) {
         if(digitInput >= 0 && digitInput < C_WIDTH) {
             c_place(board, digitInput);
+            c_place(board, c_findbestmove(board, 1, c_nexttoken(board)));
         }
     }
 

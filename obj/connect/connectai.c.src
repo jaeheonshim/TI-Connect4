@@ -6,7 +6,7 @@ _c_findbestmove:
 	ld	hl, -15
 	call	__frameset
 	ld	iy, 0
-	ld	de, -8388608
+	ld	de, -1000
 	ld	(ix + -6), de
 	ld	de, 7
 	lea	bc, iy + 0
@@ -134,7 +134,7 @@ _c_minimax:
 	or	a, a
 	sbc	hl, bc
 	jq	nz, BB1_14
-	ld	hl, 8388607
+	ld	hl, 1000
 	ld	(ix + -6), hl
 	ld	iy, 0
 BB1_4:
@@ -213,7 +213,7 @@ BB1_13:
 	pop	ix
 	ret
 BB1_14:
-	ld	de, -8388608
+	ld	de, -1000
 	ld	iy, 0
 BB1_15:
 	lea	hl, iy + 0
@@ -440,13 +440,13 @@ BB2_19:
 	or	a, a
 	sbc	hl, de
 	jq	z, BB2_22
-	ld	hl, -8388608
+	ld	hl, -1000
 	jq	BB2_23
 BB2_21:
 	ld	hl, (ix + -3)
 	jq	BB2_23
 BB2_22:
-	ld	hl, 8388607
+	ld	hl, 1000
 BB2_23:
 	ld	sp, ix
 	pop	ix
