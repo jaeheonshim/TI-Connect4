@@ -1,0 +1,1 @@
+void drawBoard(char **board, int x, int y);
