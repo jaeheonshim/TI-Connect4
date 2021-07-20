@@ -3,51 +3,258 @@
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, -3
-	call	__frameset
 	call	_c_newboard
-	ld	(ix + -3), hl
-	ld	de, 0
-	push	de
-	push	hl
-	call	_c_place
-	pop	hl
-	pop	hl
+	ld	(_board), hl
 	ld	iy, -3145600
 	call	_os_ClrLCD
 	call	_os_HomeUp
 	call	_os_DrawStatusBar
 	call	_gfx_Begin
-	ld	hl, 120
+	ld	hl, 1
 	push	hl
-	ld	hl, 160
+	call	_gfx_SetDraw
+	pop	hl
+BB0_1:
+	call	_os_GetCSC
+	cp	a, 15
+	jq	z, BB0_3
+	call	_loop
+	jq	BB0_1
+BB0_3:
+	or	a, a
+	sbc	hl, hl
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_loop
+_loop:
+	ld	hl, -3
+	call	__frameset
+	call	_kb_Scan
+	call	_getDigitInput
+	push	hl
+	pop	iy
+	ld	(_digitInput), iy
+	ld	bc, (_lastInput)
+	ld	de, 7
+	or	a, a
+	sbc	hl, de
+	call	__setflag
+	jq	p, BB1_5
+	ld	de, -1
+	lea	hl, iy + 0
+	or	a, a
+	sbc	hl, de
+	jq	z, BB1_6
+	lea	hl, iy + 0
+	or	a, a
+	sbc	hl, bc
+	jq	z, BB1_7
+	ld	hl, (_board)
+	push	iy
+	push	hl
+	call	_c_place
+	pop	hl
+	pop	hl
+	ld	hl, (_board)
+	ld	(ix + -3), hl
+	push	hl
+	call	_c_nexttoken
+	pop	de
+	push	hl
+	ld	hl, 2
 	push	hl
 	ld	hl, (ix + -3)
 	push	hl
+	call	_c_findbestmove
+	pop	de
+	pop	de
+	pop	de
+	push	hl
+	ld	hl, (ix + -3)
+	push	hl
+	call	_c_place
+	pop	hl
+	pop	hl
+	ld	iy, (_digitInput)
+	jq	BB1_4
+BB1_5:
+	jq	BB1_4
+BB1_6:
+	jq	BB1_4
+BB1_7:
+BB1_4:
+	ld	(_lastInput), iy
+	pop	hl
+	pop	ix
+	jp	_render
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_getDigitInput
+_getDigitInput:
+	ld	iy, -720874
+	ld.sis	bc, 1
+	ld	de, 0
+	ld	l, (iy)
+	ld	h, (iy + 1)
+	call	__sand
+	ld	a, l
+	xor	a, c
+	xor	a, c
+	bit	0, a
+	jq	nz, BB2_21
+	ld	l, (iy)
+	ld	h, (iy + 1)
+	ld	a, l
+	bit	1, a
+	jq	nz, BB2_2
+	ld	l, (iy)
+	ld	h, (iy + 1)
+	ld	a, l
+	bit	2, a
+	jq	nz, BB2_4
+	ld	l, (iy)
+	ld	h, (iy + 1)
+	ld	a, l
+	bit	3, a
+	jq	nz, BB2_6
+	ld	hl, -720872
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	dec	hl
+	ld	a, e
+	bit	1, a
+	jq	nz, BB2_8
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	dec	hl
+	ld	a, e
+	bit	2, a
+	jq	nz, BB2_10
+	push	de
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	l, e
+	ld	h, d
+	pop	de
+	ld	a, l
+	bit	3, a
+	jq	nz, BB2_12
+	ld	hl, -720870
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	dec	hl
+	ld	a, e
+	bit	1, a
+	jq	nz, BB2_14
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	dec	hl
+	ld	a, e
+	bit	2, a
+	jq	nz, BB2_16
+	push	de
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	l, e
+	ld	h, d
+	pop	de
+	ld	a, l
+	bit	3, a
+	jq	z, BB2_18
+	ld	hl, 9
+	jq	BB2_20
+BB2_2:
+	ld	de, 1
+	jq	BB2_21
+BB2_4:
+	ld	de, 4
+	jq	BB2_21
+BB2_6:
+	ld	de, 7
+	jq	BB2_21
+BB2_8:
+	ld	de, 2
+	jq	BB2_21
+BB2_10:
+	ld	de, 5
+	jq	BB2_21
+BB2_12:
+	ld	de, 8
+	jq	BB2_21
+BB2_14:
+	ld	de, 3
+	jq	BB2_21
+BB2_16:
+	ld	de, 6
+BB2_21:
+	ex	de, hl
+	ret
+BB2_18:
+	ld	hl, -1
+BB2_20:
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_render
+_render:
+	ld	hl, 160
+	ld	de, 120
+	ld	bc, (_board)
+	push	de
+	push	hl
+	push	bc
 	call	_drawBoard
 	pop	hl
 	pop	hl
 	pop	hl
-BB0_1:
-	call	_os_GetCSC
-	or	a, a
-	jq	z, BB0_1
-	or	a, a
-	sbc	hl, hl
-	ld	sp, ix
-	pop	ix
+	ld	hl, 1
+	push	hl
+	call	_gfx_Blit
+	pop	hl
 	ret
 	section	.text,"ax",@progbits
+
+	section	.data,"aw",@progbits
+	public	_lastInput
+_lastInput:
+	dl	16777215
+
+	section	.bss,"aw",@nobits
+	public	_board
+_board:
+	rb	3
+
+	section	.bss,"aw",@nobits
+	public	_digitInput
+_digitInput:
+	rb	3
 
 	ident	"clang version 12.0.0 (https://github.com/jacobly0/llvm-project 170be88120e3aa88c20eea5615ba76b8f1d6c647)"
 	extern	_c_place
 	extern	__Unwind_SjLj_Register
-	extern	__Unwind_SjLj_Unregister
 	extern	_c_newboard
 	extern	__frameset
+	extern	_c_nexttoken
 	extern	_gfx_Begin
+	extern	_kb_Scan
+	extern	_os_ClrLCD
+	extern	__sand
+	extern	_os_DrawStatusBar
+	extern	_gfx_SetDraw
+	extern	__setflag
+	extern	__Unwind_SjLj_Unregister
+	extern	_gfx_Blit
+	extern	_c_findbestmove
 	extern	_drawBoard
 	extern	_os_GetCSC
-	extern	_os_ClrLCD
-	extern	_os_DrawStatusBar
 	extern	_os_HomeUp
