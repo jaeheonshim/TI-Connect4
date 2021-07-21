@@ -1,19 +1,19 @@
 #include <tice.h>
 #include <graphx.h>
-#include "include/connect.h"
+#include "../include/connect.h"
 
 #define C_BLUE 26
 #define C_RED 224
 #define C_YELLOW 231
 #define C_WHITE 255
 
-#define BOARD_WIDTH 255
-#define BOARD_HEIGHT 216
+#define BOARD_WIDTH (255 * scale)
+#define BOARD_HEIGHT (216 * scale)
 
-#define SPACING 7
-#define RADIUS 14
+#define SPACING (7 * scale)
+#define RADIUS (14 * scale)
 
-void drawBoard(char **board, int x, int y) {
+void drawBoard(char **board, int x, int y, float scale) {
     int leftX = (x - (BOARD_WIDTH / 2)), topY = (y - BOARD_HEIGHT / 2);
     gfx_SetColor(C_BLUE);
     gfx_FillRectangle_NoClip(leftX, topY, BOARD_WIDTH, BOARD_HEIGHT);

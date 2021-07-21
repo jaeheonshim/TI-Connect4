@@ -1,6 +1,8 @@
 #define EMPTY 0
+
 #define RED 1
 #define YELLOW -1
+#define TIE 2
 
 #define C_WIDTH 7
 #define C_HEIGHT 6

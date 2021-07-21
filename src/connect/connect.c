@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
-#include "include/connect.h"
+#include "../include/connect.h"
 
 #define FINDWIN(a, b) ((a) > (b) ? (a) : (b))
 #define TRANSFORM_COUNT (sizeof transforms / (sizeof(int) * 2))
@@ -53,6 +53,13 @@ int c_canplace(char **board, int x) {
 }
 
 int c_getwinner(char **board) {
+    int i;
+    for(i = 0; i < C_WIDTH; i++) {
+        if(c_canplace(board, i)) break;
+    }
+
+    if(i == C_WIDTH) return TIE;
+
     for(int row = 0; row < C_HEIGHT; row++) {
         for(int col = 0; col < C_WIDTH; col++) {
             if(board[row][col] == EMPTY) continue;

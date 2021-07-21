@@ -6,64 +6,82 @@
 #include "include/connect.h"
 #include "include/connectai.h"
 
-char **board;
-int lastInput = -1;
-int digitInput;
+#define MENU 0
+#define GAME 1
+
+static unsigned long lastTick;
 
 void render();
 int getDigitInput();
-void loop();
+void loop(unsigned long delta);
+
+static struct screen screen_menu = {
+    menu_init,
+    menu_draw,
+    menu_update
+};
+
+static struct screen screen_game = {
+    game_init,
+    game_draw,
+    game_update
+};
+
+static struct screen *currentScreen = &screen_menu;
 
 /* Main function, called first */
 int main(void)
 {
-    board = c_newboard();
-    /* Clear the homescreen */
+    unsigned long delta;
+
+    srandom(rtc_Time());
+    timer_Enable(1, TIMER_32K, TIMER_NOINT, TIMER_UP);
     os_ClrHome();
 
     gfx_Begin();
     gfx_SetDrawBuffer();
 
-    /* Waits for a key */
-    while (os_GetCSC() != sk_Clear) loop();
+    screen_menu.init();
+    screen_game.init();
+    
+    lastTick = timer_Get(1);
 
-    /* Return 0 for success */
+    do {
+        kb_Scan();
+    } while(kb_Data[6] & kb_Enter);
+
+    while (os_GetCSC() != sk_Clear) {
+        delta = (timer_Get(1) - lastTick) / 32;
+        lastTick = timer_Get(1);
+        loop(delta);
+    }
+
+    gfx_End();
+
     return 0;
 }
 
-void loop() {
+void loop(unsigned long delta) {
     kb_Scan();
-    if((digitInput = getDigitInput()) != -1 && digitInput != lastInput) {
-        if(digitInput >= 0 && digitInput < C_WIDTH) {
-            c_place(board, digitInput);
-            c_place(board, c_findbestmove(board, 1, c_nexttoken(board)));
-        }
+
+    if(kb_Data[6] & kb_Enter && currentScreen == &screen_menu) {
+        currentScreen = &screen_game;
     }
 
-    lastInput = digitInput;
+    currentScreen->update(delta);
 
     render();
 }
 
-int getDigitInput() {
-    if(kb_Data[3] & kb_0) return 0;
-    else if(kb_Data[3] & kb_1) return 1;
-    else if(kb_Data[3] & kb_4) return 4;
-    else if(kb_Data[3] & kb_7) return 7;
-
-    else if(kb_Data[4] & kb_2) return 2;
-    else if(kb_Data[4] & kb_5) return 5;
-    else if(kb_Data[4] & kb_8) return 8;
-
-    else if(kb_Data[5] & kb_3) return 3;
-    else if(kb_Data[5] & kb_6) return 6;
-    else if(kb_Data[5] & kb_9) return 9;
-
-    else return -1;
-}
-
 void render() {
-    drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2);
+    gfx_FillScreen(255);
+    gfx_SetColor(0);
+
+    currentScreen->draw();
+
+    gfx_SetTextFGColor(74);
+    gfx_SetTextScale(1, 1);
+    gfx_PrintStringXY("Exit: [CLEAR]", 234, 2);
 
     gfx_BlitBuffer();
 }
