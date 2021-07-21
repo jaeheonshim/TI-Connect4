@@ -74,7 +74,7 @@ void loop(unsigned long delta) {
 }
 
 void render() {
-    gfx_FillScreen(255);
+    gfx_FillScreen(223);
     gfx_SetColor(0);
 
     currentScreen->draw();

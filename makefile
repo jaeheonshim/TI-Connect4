@@ -2,8 +2,8 @@
 # Makefile Options
 # ----------------------------
 
-NAME ?= DEMO
-DESCRIPTION ?= "CE C Toolchain Demo"
+NAME ?= TIC4
+DESCRIPTION ?= "CE Connect 4"
 COMPRESSED ?= NO
 ARCHIVED ?= NO
 
