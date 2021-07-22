@@ -21,7 +21,7 @@ void menu_draw() {
     gfx_SetTextFGColor(224);
     gfx_PrintStringXY("CONNECT", 60, 14);
     gfx_SetTextFGColor(26);
-     gfx_PrintStringXY("4", 240, 14);
+    gfx_PrintStringXY("4", 240, 14);
 
     gfx_SetTextFGColor(0);
     gfx_SetTextScale(2, 2);
