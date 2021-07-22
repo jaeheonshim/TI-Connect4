@@ -1,7 +1,7 @@
 #include <limits.h>
 #include <stdio.h>
-#include "../include/connect.h"
-#include "../include/connectai.h"
+#include "include/connect.h"
+#include "include/connectai.h"
 
 #define TRANSFORM_COUNT (sizeof transforms / (sizeof(int) * 2))
 

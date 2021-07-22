@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
-#include "../include/connect.h"
+#include "include/connect.h"
 
 #define FINDWIN(a, b) ((a) > (b) ? (a) : (b))
 #define TRANSFORM_COUNT (sizeof transforms / (sizeof(int) * 2))

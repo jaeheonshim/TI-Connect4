@@ -1,12 +1,14 @@
 #include <tice.h>
 #include <graphx.h>
 #include <keypadc.h>
-#include "../include/connect.h"
-#include "../include/drawing.h"
+#include "include/connect.h"
+#include "include/drawing.h"
 
 static char **board;
 static int lastInput = -1;
 static int digitInput;
+
+int getDigitInput();
 
 void game_init() {
     board = c_newboard();

@@ -1,8 +1,8 @@
 #include <tice.h>
 #include <graphx.h>
 #include <stdio.h>
-#include "../include/connect.h"
-#include "../include/drawing.h"
+#include "include/connect.h"
+#include "include/drawing.h"
 
 #define MOVE_TIME 500
 

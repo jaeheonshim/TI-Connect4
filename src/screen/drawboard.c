@@ -1,6 +1,6 @@
 #include <tice.h>
 #include <graphx.h>
-#include "../include/connect.h"
+#include "include/connect.h"
 
 #define C_BLUE 26
 #define C_RED 224
