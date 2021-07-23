@@ -84,7 +84,7 @@ void doMoveLogic() {
         }
         case PVAI: {
             if(c_nexttoken(board) == YELLOW) {
-                c_place(board, c_findbestmove(board, 1, YELLOW));
+                c_place(board, c_findbestmove(board, 2, YELLOW));
             } else {
                 handleUserInput();
             }
