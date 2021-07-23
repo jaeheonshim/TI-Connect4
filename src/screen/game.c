@@ -4,6 +4,7 @@
 #include <keypadc.h>
 #include <stdio.h>
 #include "include/connect.h"
+#include "include/connectai.h"
 #include "include/drawing.h"
 
 static char **board;
@@ -13,12 +14,18 @@ static int currentPlace = 0;
 static char gameMode = PVP;
 
 int getDigitInput();
+void handleUserInput();
+void doMoveLogic();
 
 void game_init() {
     board = c_newboard();
 }
 
 void game_update(unsigned long delta) {
+    doMoveLogic();
+}
+
+void handleUserInput() {
     int currentWinner = c_getwinner(board);
     if(kb_IsDown(kb_KeyEnter) && lastInput != kb_KeyEnter) {
         c_place(board, currentPlace);
@@ -50,14 +57,24 @@ void game_update(unsigned long delta) {
 void doMoveLogic() {
     switch(gameMode) {
         case PVP: {
-
+            handleUserInput();
+            break;
+        }
+        case PVAI: {
+            if(c_nexttoken(board) == YELLOW) {
+                c_place(board, c_findbestmove(board, 1, YELLOW));
+            } else {
+                handleUserInput();
+            }
+            break;
         }
     }
 }
 
 void game_draw() {
     drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2, 1);
-    drawPlacer(LCD_WIDTH / 2, LCD_HEIGHT / 2, currentPlace, c_nexttoken(board), 1);
+    if(gameMode != PVAI || (gameMode == PVAI && c_nexttoken(board) != YELLOW))
+        drawPlacer(LCD_WIDTH / 2, LCD_HEIGHT / 2, currentPlace, c_nexttoken(board), 1);
 }
 
 void setGameMode(char g) {

@@ -21,6 +21,10 @@ void menu_init() {
 void menu_update(unsigned long delta) {
     int digitInput = getDigitInput();
     if(digitInput == 1) {
+        setGameMode(PVP);
+        setScreen(&screen_game);
+    } else if(digitInput == 2) {
+        setGameMode(PVAI);
         setScreen(&screen_game);
     }
 }
