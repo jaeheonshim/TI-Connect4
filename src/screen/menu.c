@@ -9,7 +9,6 @@
 
 static char *option1 = "[1] Player v. Player";
 static char *option2 = "[2] Player v. AI";
-static char *option3 = "[3] AI v. AI";
 
 static int option1Width;
 
@@ -35,5 +34,4 @@ void menu_draw() {
 
     gfx_PrintStringXY(option1, LCD_WIDTH / 2 - option1Width / 2, LCD_HEIGHT / 2 - FONT_HEIGHT - FONT_HEIGHT / 2 - LINE_HEIGHT);
     gfx_PrintStringXY(option2, LCD_WIDTH / 2 - option1Width / 2, LCD_HEIGHT / 2 - FONT_HEIGHT / 2);
-    gfx_PrintStringXY(option3, LCD_WIDTH / 2 - option1Width / 2, LCD_HEIGHT / 2 + FONT_HEIGHT / 2 + LINE_HEIGHT);
 }

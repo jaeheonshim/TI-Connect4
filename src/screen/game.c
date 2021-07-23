@@ -19,6 +19,16 @@ void doMoveLogic();
 
 void game_init() {
     board = c_newboard();
+
+    if(gameMode == AIVAI) {
+        int rand;
+        for(int i = 0; i < 4; i++) {
+            do {
+                rand = random() % C_WIDTH;
+            } while(!c_canplace(board, rand));
+            c_place(board, rand);
+        }
+    }
 }
 
 void game_update(unsigned long delta) {
@@ -68,12 +78,16 @@ void doMoveLogic() {
             }
             break;
         }
+        case AIVAI: {
+            c_place(board, c_findbestmove(board, 2, c_nexttoken(board)));
+            break;
+        }
     }
 }
 
 void game_draw() {
     drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2, 1);
-    if(gameMode != PVAI || (gameMode == PVAI && c_nexttoken(board) != YELLOW))
+    if(gameMode != AIVAI && (gameMode != PVAI || (gameMode == PVAI && c_nexttoken(board) != YELLOW)))
         drawPlacer(LCD_WIDTH / 2, LCD_HEIGHT / 2, currentPlace, c_nexttoken(board), 1);
 }
 
