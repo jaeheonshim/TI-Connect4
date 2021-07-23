@@ -5,6 +5,7 @@
 #include "include/drawing.h"
 #include "include/connect.h"
 #include "include/connectai.h"
+#include "include/tic4.h"
 
 #define MENU 0
 #define GAME 1
@@ -15,19 +16,19 @@ void render();
 int getDigitInput();
 void loop(unsigned long delta);
 
-static struct screen screen_intro = {
+struct screen screen_intro = {
     intro_init,
     intro_draw,
     intro_update
 };
 
-static struct screen screen_menu = {
+struct screen screen_menu = {
     menu_init,
     menu_draw,
     menu_update
 };
 
-static struct screen screen_game = {
+struct screen screen_game = {
     game_init,
     game_draw,
     game_update
@@ -72,7 +73,7 @@ void loop(unsigned long delta) {
     kb_Scan();
 
     if(kb_Data[6] & kb_Enter && currentScreen == &screen_intro) {
-        currentScreen = &screen_menu;
+        setScreen(&screen_menu);
     }
 
     currentScreen->update(delta);
@@ -91,4 +92,8 @@ void render() {
     gfx_PrintStringXY("Exit: [CLEAR]", 234, 2);
 
     gfx_BlitBuffer();
+}
+
+void setScreen(struct screen *p) {
+    currentScreen = p;
 }

@@ -1,3 +1,4 @@
+#include "include/tic4.h"
 #include <tice.h>
 #include <graphx.h>
 #include <keypadc.h>
@@ -7,6 +8,8 @@
 static char **board;
 static int lastInput = -1;
 static int digitInput;
+
+static char gameMode = PVP;
 
 int getDigitInput();
 
@@ -23,23 +26,23 @@ void game_update(unsigned long delta) {
     lastInput = digitInput;
 }
 
-void game_draw() {
-    drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2, 1);
+void doMoveLogic() {
+    switch(gameMode) {
+        case PVP: {
+
+        }
+    }
 }
 
-int getDigitInput() {
-    if(kb_Data[3] & kb_0) return 0;
-    else if(kb_Data[3] & kb_1) return 1;
-    else if(kb_Data[3] & kb_4) return 4;
-    else if(kb_Data[3] & kb_7) return 7;
+void game_draw() {
+    drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2, 1);
+    drawPlacer(LCD_WIDTH / 2, LCD_HEIGHT / 2, 0, YELLOW, 1);
+}
 
-    else if(kb_Data[4] & kb_2) return 2;
-    else if(kb_Data[4] & kb_5) return 5;
-    else if(kb_Data[4] & kb_8) return 8;
+void setGameMode(char g) {
+    gameMode = g;
+}
 
-    else if(kb_Data[5] & kb_3) return 3;
-    else if(kb_Data[5] & kb_6) return 6;
-    else if(kb_Data[5] & kb_9) return 9;
-
-    else return -1;
+char getGameMode() {
+    return gameMode;
 }

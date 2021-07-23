@@ -7,6 +7,9 @@
 #define C_YELLOW 231
 #define C_WHITE 255
 
+#define C_LRED 244
+#define C_LYELLOW 247
+
 #define BOARD_WIDTH (255 * scale)
 #define BOARD_HEIGHT (216 * scale)
 
@@ -29,4 +32,18 @@ void drawBoard(char **board, int x, int y, float scale) {
                 topY + (row * RADIUS * 2) + ((row + 1) * SPACING) + RADIUS, RADIUS);
         }
     }
+}
+
+void drawPlacer(int x, int y, int pos, int color, float scale) {
+    int leftX = (x - (BOARD_WIDTH / 2)), topY = (y - BOARD_HEIGHT / 2);
+
+    if(color == RED) {
+        gfx_SetColor(C_LRED);
+    } else {
+        gfx_SetColor(C_LYELLOW);
+    }
+
+    gfx_FillCircle(
+        leftX + (pos * RADIUS * 2) + ((pos + 1) * SPACING + RADIUS),
+        topY + SPACING + RADIUS, RADIUS);
 }
