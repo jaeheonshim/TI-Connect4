@@ -18,3 +18,4 @@ int validpos(int row, int col);
 char **c_copyboard(char **board);
 int c_canplace(char **board, int x);
 void c_freeboard(char **board);
+int c_remove(char **board, int x);

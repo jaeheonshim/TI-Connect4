@@ -22,22 +22,25 @@ static const int transforms[][2] = {
     {-1, -1}
 };
 
-
 int placeable(char **board, int row, int col, int color);
 
 int c_findbestmove(char **board, int depth, int player) {
     int bestCol = 0;
     int maxVal = MINVAL;
-    
-    for(int i = 0; i < C_WIDTH; i++) {
-        if(c_canplace(board, i)) {
-            char **copyboard = c_copyboard(board);
-            c_place(copyboard, i);
-            int res = c_minimax(copyboard, depth, 0, MINVAL, MAXVAL, player);
-            c_freeboard(copyboard);
-            if(res > maxVal) {
-                bestCol = i;
-                maxVal = res;
+    int mid = C_WIDTH / 2;
+    int pos;
+
+    for(int i = 0; i <= mid; i++) {
+        for(int sign = -1; sign <= 1; sign += 2) {
+            pos = mid + i * sign;
+            if(c_canplace(board, pos)) {
+                c_place(board, pos);
+                int res = c_minimax(board, depth, 0, MINVAL, MAXVAL, player);
+                c_remove(board, pos);
+                if(res > maxVal) {
+                    bestCol = pos;
+                    maxVal = res;
+                }
             }
         }
     }
@@ -49,18 +52,19 @@ int c_findbestmove(char **board, int depth, int player) {
  * Returns the maximum score possible for the "maximizer" in a certain position, given both parties play optimally.
  */
 int c_minimax(char **board, int depth, int maximizing, int alpha, int beta, int player) {
+    char i;
+    int res, max, min;
     if(depth <= 0 || c_getwinner(board) != 0) {
         return c_evalpos(board, player);
     }
 
     if(maximizing) {
-        int max = MINVAL;
-        for(int i = 0; i < C_WIDTH; i++) {
+        max = MINVAL;
+        for(i = 0; i < C_WIDTH; i++) {
             if(c_canplace(board, i)) {
-                char **copyboard = c_copyboard(board);
-                c_place(copyboard, i);
-                int res = c_minimax(copyboard, depth - 1, !maximizing, alpha, beta, player);
-                c_freeboard(copyboard);
+                c_place(board, i);
+                res = c_minimax(board, depth - 1, !maximizing, alpha, beta, player);
+                c_remove(board, i);
                 max = MAX(res, max);
                 alpha = MAX(res, alpha);
 
@@ -73,13 +77,12 @@ int c_minimax(char **board, int depth, int maximizing, int alpha, int beta, int 
         return max;
     } else {
         // assuming opponent plays optimally, if they don't they're fucked anyway
-        int min = MAXVAL;
-        for(int i = 0; i < C_WIDTH; i++) {
+        min = MAXVAL;
+        for(i = 0; i < C_WIDTH; i++) {
             if(c_canplace(board, i)) {
-                char **copyboard = c_copyboard(board);
-                c_place(copyboard, i);
-                int res = c_minimax(copyboard, depth - 1, !maximizing, alpha, beta, player);
-                c_freeboard(copyboard);
+                c_place(board, i);
+                res = c_minimax(board, depth - 1, !maximizing, alpha, beta, player);
+                c_remove(board, i);
 
                 min = MIN(res, min);
                 beta = MIN(beta, min);
@@ -104,14 +107,15 @@ int c_evalpos(char **board, int evaluator) {
     }
 
     int tRow, tCol, i, color;
+    int row, col, t;
     
-    for(int row = 0; row < C_HEIGHT; row++) {
-        for(int col = 0; col < C_WIDTH; col++) {
-            if(board[row][col] == EMPTY) continue;
+    for(row = 0; row < C_HEIGHT; row++) {
 
+        for(col = 0; col < C_WIDTH; col++) {
+            if(board[row][col] == EMPTY) continue;
             color = board[row][col];
 
-            for(int t = 0; t < TRANSFORM_COUNT; t++) {
+            for(t = 0; t < TRANSFORM_COUNT; t++) {
                 for(i = 1; i < 4; i++) {
                     tRow = row + transforms[t][0] * i;
                     tCol = col + transforms[t][1] * i;

@@ -91,7 +91,7 @@ void doMoveLogic() {
             break;
         }
         case AIVAI: {
-            c_place(board, c_findbestmove(board, 2, c_nexttoken(board)));
+            c_place(board, c_findbestmove(board, 1, c_nexttoken(board)));
             break;
         }
     }

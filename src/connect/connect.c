@@ -48,46 +48,55 @@ int c_place(char **board, int x) {
     return 0;
 }
 
+int c_remove(char **board, int x) {
+    for(int i = 0; i < C_HEIGHT; i++) {
+        if(board[i][x] != EMPTY) {
+            board[i][x] = EMPTY;
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 int c_canplace(char **board, int x) {
     return board[0][x] == EMPTY;
 }
 
 int c_getwinner(char **board) {
-    int i;
+    int i, found, row, col, color, tRow, tCol, t;
     for(i = 0; i < C_WIDTH; i++) {
         if(c_canplace(board, i)) break;
     }
 
     if(i == C_WIDTH) return TIE;
-
-    for(int row = 0; row < C_HEIGHT; row++) {
-        for(int col = 0; col < C_WIDTH; col++) {
+    for(row = 0; row < C_HEIGHT; row++) {
+        found = 0;
+        for(col = 0; col < C_WIDTH; col++) {
             if(board[row][col] == EMPTY) continue;
+            found = 1;
 
-            int chains[4] = {board[row][col], board[row][col], board[row][col], board[row][col]};
-            int tRow, tCol;
+            color = board[row][col];
 
-            for(int i = 1; i < 4; i++) {
-                for(int t = 0; t < TRANSFORM_COUNT; t++) {
+            for(t = 0; t < TRANSFORM_COUNT; t++) {
+                for(i = 1; i < 4; i++) {
                     tRow = row + transforms[t][0] * i;
                     tCol = col + transforms[t][1] * i;
 
                     if(validpos(tRow, tCol)) {
-                        if(board[tRow][tCol] != chains[t]) {
-                            chains[t] = 0;
+                        if(board[tRow][tCol] != color) {
+                            break;
                         }
                     } else {
-                        chains[t] = 0;
+                        break;
                     }
                 }
-            }
 
-            for(int i = 0; i < 4; i++) {
-                if(chains[i] != 0) {
-                    return chains[i];
-                }
+                if(i == 4) return color;
             }
         }
+
+        if(!found) break;
     }
 
     return 0;
