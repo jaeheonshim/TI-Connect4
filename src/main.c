@@ -15,6 +15,12 @@ void render();
 int getDigitInput();
 void loop(unsigned long delta);
 
+static struct screen screen_intro = {
+    intro_init,
+    intro_draw,
+    intro_update
+};
+
 static struct screen screen_menu = {
     menu_init,
     menu_draw,
@@ -27,7 +33,7 @@ static struct screen screen_game = {
     game_update
 };
 
-static struct screen *currentScreen = &screen_menu;
+static struct screen *currentScreen = &screen_intro;
 
 /* Main function, called first */
 int main(void)
@@ -42,6 +48,7 @@ int main(void)
     gfx_SetDrawBuffer();
 
     screen_menu.init();
+    screen_intro.init();
     screen_game.init();
     
     lastTick = timer_Get(1);
@@ -64,8 +71,8 @@ int main(void)
 void loop(unsigned long delta) {
     kb_Scan();
 
-    if(kb_Data[6] & kb_Enter && currentScreen == &screen_menu) {
-        currentScreen = &screen_game;
+    if(kb_Data[6] & kb_Enter && currentScreen == &screen_intro) {
+        currentScreen = &screen_menu;
     }
 
     currentScreen->update(delta);
