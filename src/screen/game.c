@@ -9,6 +9,7 @@
 
 static char **board;
 static int lastInput = -1;
+static int lastPlace = -1;
 static int currentPlace = 0;
 
 static char gameMode = PVP;
@@ -50,12 +51,14 @@ void handleUserInput() {
     int currentWinner = c_getwinner(board);
     if(kb_IsDown(kb_KeyEnter) && lastInput != kb_KeyEnter) {
         c_place(board, currentPlace);
+        lastPlace = currentPlace;
         lastInput = kb_KeyEnter;
         currentWinner = c_getwinner(board);
         while(c_canplace(board, currentPlace) == 0 && currentWinner == 0) {
             currentPlace++;
             currentPlace %= C_WIDTH;
         }
+        
         while(kb_IsDown(kb_KeyEnter)) kb_Scan(); // block enter (TERRIBLE)
     } else if(kb_IsDown(kb_KeyLeft) && lastInput != kb_KeyLeft) {
         do {
@@ -84,22 +87,20 @@ void doMoveLogic() {
         }
         case PVAI: {
             if(c_nexttoken(board) == YELLOW) {
-                c_place(board, c_findbestmove(board, 2, YELLOW));
+                int bestMove = c_findbestmove(board, 2, YELLOW);
+                c_place(board, bestMove);
+                lastPlace = bestMove;
             } else {
                 handleUserInput();
             }
-            break;
-        }
-        case AIVAI: {
-            c_place(board, c_findbestmove(board, 3, c_nexttoken(board)));
             break;
         }
     }
 }
 
 void game_draw() {
-    drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2, 1);
-    if(gameMode != AIVAI && (gameMode != PVAI || (gameMode == PVAI && c_nexttoken(board) != YELLOW)))
+    drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2, 1, lastPlace);
+    if(game_winner == 0 && gameMode != AIVAI && (gameMode != PVAI || (gameMode == PVAI && c_nexttoken(board) != YELLOW)))
         drawPlacer(LCD_WIDTH / 2, LCD_HEIGHT / 2, currentPlace, c_nexttoken(board), 1);
 
     if(game_winner != 0) {

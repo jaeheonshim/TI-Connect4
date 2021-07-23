@@ -19,5 +19,6 @@ char **c_copyboard(char **board);
 int c_canplace(char **board, int x);
 void c_freeboard(char **board);
 int c_remove(char **board, int x);
+int c_lastplace(char **board, int col);
 
 extern const int transforms[8][2];

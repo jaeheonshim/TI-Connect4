@@ -67,6 +67,14 @@ int c_canplace(char **board, int x) {
     return board[0][x] == EMPTY;
 }
 
+int c_lastplace(char **board, int col) {
+    for(int i = 0; i < C_HEIGHT; i++) {
+        if(board[i][col] != EMPTY) return i;
+    }
+
+    return 0;
+}
+
 int c_getwinner(char **board) {
     int i, found, row, col, color, tRow, tCol, t;
     for(i = 0; i < C_WIDTH; i++) {

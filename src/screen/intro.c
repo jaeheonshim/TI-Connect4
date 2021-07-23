@@ -14,7 +14,7 @@ void intro_init() {
 }
 
 void intro_draw() {
-    drawBoard(board, LCD_WIDTH / 2, (LCD_HEIGHT / 2) - 10, 0.6);
+    drawBoard(board, LCD_WIDTH / 2, (LCD_HEIGHT / 2) - 10, 0.6, -1);
 
     gfx_SetTextFGColor(0);
     gfx_SetTextScale(3, 3);

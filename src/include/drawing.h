@@ -1,5 +1,5 @@
-void drawBoard(char **board, int x, int y, float scale);
 void drawPlacer(int x, int y, int pos, int color, float scale);
+void drawBoard(char **board, int x, int y, float scale, char highlight);
 
 void intro_init();
 void intro_draw();
