@@ -12,6 +12,7 @@ static int lastInput = -1;
 static int currentPlace = 0;
 
 static char gameMode = PVP;
+char game_winner = 0;
 
 int getDigitInput();
 void handleUserInput();
@@ -32,7 +33,13 @@ void game_init() {
 }
 
 void game_update(unsigned long delta) {
-    doMoveLogic();
+    if(game_winner == 0) {
+        doMoveLogic();
+    }
+    if(game_winner == 0 && c_getwinner(board) != 0) {
+        game_winner = c_getwinner(board);
+        game_over_init();
+    }
 }
 
 void handleUserInput() {
@@ -89,6 +96,10 @@ void game_draw() {
     drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2, 1);
     if(gameMode != AIVAI && (gameMode != PVAI || (gameMode == PVAI && c_nexttoken(board) != YELLOW)))
         drawPlacer(LCD_WIDTH / 2, LCD_HEIGHT / 2, currentPlace, c_nexttoken(board), 1);
+
+    if(game_winner != 0) {
+        draw_game_over();
+    }
 }
 
 void setGameMode(char g) {

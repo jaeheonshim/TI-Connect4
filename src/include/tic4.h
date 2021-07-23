@@ -13,3 +13,5 @@ void setScreen(struct screen *p);
 extern struct screen screen_intro;
 extern struct screen screen_menu;
 extern struct screen screen_game;
+
+extern char game_winner;
