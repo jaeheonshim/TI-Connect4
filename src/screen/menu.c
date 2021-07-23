@@ -2,6 +2,7 @@
 #include <graphx.h>
 #include <keypadc.h>
 #include "include/tic4.h"
+#include "include/drawing.h"
 
 #define TEXT_SCALE 2
 #define FONT_HEIGHT (8 * TEXT_SCALE)
@@ -22,9 +23,11 @@ void menu_update(unsigned long delta) {
     if(digitInput == 1) {
         setGameMode(PVP);
         setScreen(&screen_game);
+        game_init();
     } else if(digitInput == 2) {
         setGameMode(PVAI);
         setScreen(&screen_game);
+        game_init();
     }
 }
 

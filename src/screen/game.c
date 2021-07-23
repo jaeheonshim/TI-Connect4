@@ -19,6 +19,10 @@ void handleUserInput();
 void doMoveLogic();
 
 void game_init() {
+    game_winner = 0;
+    lastInput = -1;
+    currentPlace = 0;
+    if(board != NULL) c_freeboard(board);
     board = c_newboard();
 
     if(gameMode == AIVAI) {
@@ -52,6 +56,7 @@ void handleUserInput() {
             currentPlace++;
             currentPlace %= C_WIDTH;
         }
+        while(kb_IsDown(kb_KeyEnter)) kb_Scan(); // block enter (TERRIBLE)
     } else if(kb_IsDown(kb_KeyLeft) && lastInput != kb_KeyLeft) {
         do {
             currentPlace--;
