@@ -19,8 +19,6 @@ void menu_init() {
 }
 
 void menu_update(unsigned long delta) {
-    kb_Scan();
-
     int digitInput = getDigitInput();
     if(digitInput == 1) {
         setScreen(&screen_game);
