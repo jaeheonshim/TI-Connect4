@@ -11,15 +11,8 @@
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) > (b) ? (b) : (a))
 
-static const int transforms[][2] = {
-    {0, 1},
-    {1, 0},
-    {-1, 1},
-    {1, 1},
-    {0, -1},
-    {-1, 0},
-    {1, -1},
-    {-1, -1}
+static const char eval_order[7] = {
+    3, 4, 2, 5, 1, 6, 0
 };
 
 int placeable(char **board, int row, int col, int color);
@@ -30,17 +23,15 @@ int c_findbestmove(char **board, int depth, int player) {
     int mid = C_WIDTH / 2;
     int pos;
 
-    for(int i = 0; i <= mid; i++) {
-        for(int sign = -1; sign <= 1; sign += 2) {
-            pos = mid + i * sign;
-            if(c_canplace(board, pos)) {
-                c_place(board, pos);
-                int res = c_minimax(board, depth, 0, MINVAL, MAXVAL, player);
-                c_remove(board, pos);
-                if(res > maxVal) {
-                    bestCol = pos;
-                    maxVal = res;
-                }
+    for(int i = 0; i < C_WIDTH; i++) {
+        pos = eval_order[i];
+        if(c_canplace(board, pos)) {
+            c_place(board, pos);
+            int res = c_minimax(board, depth, 0, MINVAL, MAXVAL, player);
+            c_remove(board, pos);
+            if(res > maxVal) {
+                bestCol = pos;
+                maxVal = res;
             }
         }
     }
@@ -52,7 +43,7 @@ int c_findbestmove(char **board, int depth, int player) {
  * Returns the maximum score possible for the "maximizer" in a certain position, given both parties play optimally.
  */
 int c_minimax(char **board, int depth, int maximizing, int alpha, int beta, int player) {
-    char i;
+    char i, pos;
     int res, max, min;
     if(depth <= 0 || c_getwinner(board) != 0) {
         return c_evalpos(board, player);
@@ -61,10 +52,11 @@ int c_minimax(char **board, int depth, int maximizing, int alpha, int beta, int 
     if(maximizing) {
         max = MINVAL;
         for(i = 0; i < C_WIDTH; i++) {
-            if(c_canplace(board, i)) {
-                c_place(board, i);
+            pos = eval_order[i];
+            if(c_canplace(board, pos)) {
+                c_place(board, pos);
                 res = c_minimax(board, depth - 1, !maximizing, alpha, beta, player);
-                c_remove(board, i);
+                c_remove(board, pos);
                 max = MAX(res, max);
                 alpha = MAX(res, alpha);
 
@@ -79,10 +71,11 @@ int c_minimax(char **board, int depth, int maximizing, int alpha, int beta, int 
         // assuming opponent plays optimally, if they don't they're fucked anyway
         min = MAXVAL;
         for(i = 0; i < C_WIDTH; i++) {
-            if(c_canplace(board, i)) {
-                c_place(board, i);
+            pos = eval_order[i];
+            if(c_canplace(board, pos)) {
+                c_place(board, pos);
                 res = c_minimax(board, depth - 1, !maximizing, alpha, beta, player);
-                c_remove(board, i);
+                c_remove(board, pos);
 
                 min = MIN(res, min);
                 beta = MIN(beta, min);
@@ -110,7 +103,6 @@ int c_evalpos(char **board, int evaluator) {
     int row, col, t;
     
     for(row = 0; row < C_HEIGHT; row++) {
-
         for(col = 0; col < C_WIDTH; col++) {
             if(board[row][col] == EMPTY) continue;
             color = board[row][col];

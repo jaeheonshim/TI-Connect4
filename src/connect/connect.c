@@ -7,11 +7,15 @@
 #define FINDWIN(a, b) ((a) > (b) ? (a) : (b))
 #define TRANSFORM_COUNT (sizeof transforms / (sizeof(int) * 2))
 
-static const int transforms[][2] = {
+const int transforms[][2] = {
     {0, 1},
     {1, 0},
+    {-1, 1},
+    {1, 1},
+    {0, -1},
+    {-1, 0},
     {1, -1},
-    {1, 1}
+    {-1, -1}
 };
 
 char **c_newboard() {
@@ -71,10 +75,8 @@ int c_getwinner(char **board) {
 
     if(i == C_WIDTH) return TIE;
     for(row = 0; row < C_HEIGHT; row++) {
-        found = 0;
         for(col = 0; col < C_WIDTH; col++) {
             if(board[row][col] == EMPTY) continue;
-            found = 1;
 
             color = board[row][col];
 
@@ -95,8 +97,6 @@ int c_getwinner(char **board) {
                 if(i == 4) return color;
             }
         }
-
-        if(!found) break;
     }
 
     return 0;
