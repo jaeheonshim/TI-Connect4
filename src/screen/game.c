@@ -23,6 +23,7 @@ void game_init() {
     game_winner = 0;
     lastInput = -1;
     currentPlace = 0;
+    lastPlace = -1;
     if(board != NULL) c_freeboard(board);
     board = c_newboard();
 
