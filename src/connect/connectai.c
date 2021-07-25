@@ -1,5 +1,6 @@
 #include <limits.h>
 #include <stdio.h>
+#include <debug.h>
 #include "include/connect.h"
 #include "include/connectai.h"
 
@@ -17,7 +18,12 @@ static const char eval_order[7] = {
 
 int placeable(char **board, int row, int col, int color);
 
+static int d_heuristic = 0;
+
 int c_findbestmove(char **board, int depth, int player) {
+    dbg_printf("Finding best move: Depth: %d, Player: %c\n", depth, C_COLCHAR(player));
+    d_heuristic = 0;
+
     int bestCol = 0;
     int maxVal = MINVAL;
     int mid = C_WIDTH / 2;
@@ -35,6 +41,8 @@ int c_findbestmove(char **board, int depth, int player) {
             }
         }
     }
+
+    dbg_printf("Found best move: %d. Heuristic function called %d times\n", bestCol, d_heuristic);
 
     return bestCol;
 }
@@ -91,6 +99,7 @@ int c_minimax(char **board, int depth, int maximizing, int alpha, int beta, int 
 }
 
 int c_evalpos(char **board, int evaluator) {
+    d_heuristic++;
     int netPts = 0;
     int winner;
 

@@ -1,6 +1,7 @@
 #include <tice.h>
 #include <stdlib.h>
 #include <graphx.h>
+#include <debug.h>
 #include <keypadc.h>
 #include "include/drawing.h"
 #include "include/connect.h"
@@ -39,6 +40,7 @@ static struct screen *currentScreen = &screen_intro;
 /* Main function, called first */
 int main(void)
 {
+    dbg_printf("TI-Connect4 By Jaeheon Shim\n");
     unsigned long delta;
 
     srandom(rtc_Time());

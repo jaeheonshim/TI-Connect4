@@ -88,7 +88,7 @@ void doMoveLogic() {
         }
         case PVAI: {
             if(c_nexttoken(board) == YELLOW) {
-                int bestMove = c_findbestmove(board, 2, YELLOW);
+                int bestMove = c_findbestmove(board, 3, YELLOW);
                 c_place(board, bestMove);
                 lastPlace = bestMove;
             } else {
