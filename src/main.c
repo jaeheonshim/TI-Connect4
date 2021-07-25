@@ -3,8 +3,8 @@
 #include <graphx.h>
 #include <debug.h>
 #include <keypadc.h>
-#include "include/drawing.h"
 #include "include/connect.h"
+#include "include/drawing.h"
 #include "include/connectai.h"
 #include "include/tic4.h"
 

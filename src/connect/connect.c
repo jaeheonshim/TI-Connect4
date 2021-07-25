@@ -7,19 +7,15 @@
 #define FINDWIN(a, b) ((a) > (b) ? (a) : (b))
 #define TRANSFORM_COUNT (sizeof transforms / (sizeof(int) * 2))
 
-const int transforms[][2] = {
+static const int transforms[][2] = {
     {0, 1},
     {1, 0},
     {-1, 1},
-    {1, 1},
-    {0, -1},
-    {-1, 0},
-    {1, -1},
-    {-1, -1}
+    {1, 1}
 };
 
-char **c_newboard() {
-    char **board = (char **) malloc(sizeof(char *) * C_HEIGHT);
+Board c_newboard() {
+    Board board = (char **) malloc(sizeof(char *) * C_HEIGHT);
     for(int i = 0; i < C_HEIGHT; i++) {
         board[i] = (char *) malloc(sizeof(char) * C_WIDTH);
         for(int j = 0; j < C_WIDTH; j++) {
@@ -30,7 +26,7 @@ char **c_newboard() {
     return board;
 }
 
-void c_freeboard(char **board) {
+void c_freeboard(Board board) {
     for(int i = C_HEIGHT - 1; i >= 0; i--) {
         free(board[i]);
     }
@@ -38,7 +34,7 @@ void c_freeboard(char **board) {
     free(board);
 }
 
-int c_place(char **board, int x) {
+int c_place(Board board, int x) {
     if(!c_canplace(board, x)) return 0;
 
     int token = c_nexttoken(board);
@@ -52,7 +48,7 @@ int c_place(char **board, int x) {
     return 0;
 }
 
-int c_remove(char **board, int x) {
+int c_remove(Board board, int x) {
     for(int i = 0; i < C_HEIGHT; i++) {
         if(board[i][x] != EMPTY) {
             board[i][x] = EMPTY;
@@ -63,11 +59,11 @@ int c_remove(char **board, int x) {
     return 0;
 }
 
-int c_canplace(char **board, int x) {
+int c_canplace(Board board, int x) {
     return board[0][x] == EMPTY;
 }
 
-int c_lastplace(char **board, int col) {
+int c_lastplace(Board board, int col) {
     for(int i = 0; i < C_HEIGHT; i++) {
         if(board[i][col] != EMPTY) return i;
     }
@@ -75,13 +71,15 @@ int c_lastplace(char **board, int col) {
     return 0;
 }
 
-int c_getwinner(char **board) {
+int c_getwinner(Board board) {
     int i, found, row, col, color, tRow, tCol, t;
+    int avg;
     for(i = 0; i < C_WIDTH; i++) {
         if(c_canplace(board, i)) break;
     }
 
     if(i == C_WIDTH) return TIE;
+
     for(row = 0; row < C_HEIGHT; row++) {
         for(col = 0; col < C_WIDTH; col++) {
             if(board[row][col] == EMPTY) continue;
@@ -110,7 +108,7 @@ int c_getwinner(char **board) {
     return 0;
 }
 
-void c_printboard(char **board) {
+void c_printboard(Board board) {
     for(int i = 0; i < C_HEIGHT; i++) {
         for(int j = 0; j < C_WIDTH; j++) {
             printf("%c ", C_COLCHAR(board[i][j]));
@@ -124,7 +122,7 @@ void c_printboard(char **board) {
     printf("\n");
 }
 
-int c_nexttoken(char **board) {
+int c_nexttoken(Board board) {
     int rCount, yCount;
     rCount = yCount = 0;
 
@@ -145,12 +143,20 @@ int c_nexttoken(char **board) {
     }
 }
 
-int validpos(int row, int col) {
-    return row >= 0 && row < C_HEIGHT && col >= 0 && col < C_WIDTH;
+int c_counttoken(Board board) {
+    int count = 0;
+
+    for(int i = 0; i < C_HEIGHT; i++) {
+        for(int j = 0; j < C_WIDTH; j++) {
+            if(board[i][j] != EMPTY) count++;
+        }
+    }
+
+    return count;
 }
 
-char **c_copyboard(char **board) {
-    char **newboard = c_newboard();
+Board c_copyboard(Board board) {
+    Board newboard = c_newboard();
     for(int i = 0; i < C_HEIGHT; i++) {
         for(int j = 0; j < C_WIDTH; j++) {
             newboard[i][j] = board[i][j];

@@ -6,7 +6,7 @@
 
 #define MOVE_TIME 500
 
-static char **board;
+static Board board;
 static unsigned long timer = 0;
 
 void intro_init() {

@@ -16,7 +16,7 @@
 #define SPACING (7 * scale)
 #define RADIUS (14 * scale)
 
-void drawBoard(char **board, int x, int y, float scale, char highlight) {
+void drawBoard(Board board, int x, int y, float scale, char highlight) {
     int leftX = (x - (BOARD_WIDTH / 2)), topY = (y - BOARD_HEIGHT / 2);
     gfx_SetColor(C_BLUE);
     gfx_FillRectangle_NoClip(leftX, topY, BOARD_WIDTH, BOARD_HEIGHT);

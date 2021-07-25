@@ -7,7 +7,7 @@
 #include "include/connectai.h"
 #include "include/drawing.h"
 
-static char **board;
+static Board board;
 static int lastInput = -1;
 static int lastPlace = -1;
 static int currentPlace = 0;
@@ -18,6 +18,7 @@ char game_winner = 0;
 int getDigitInput();
 void handleUserInput();
 void doMoveLogic();
+int getMoveDepth(Board board);
 
 void game_init() {
     game_winner = 0;
@@ -115,4 +116,11 @@ void setGameMode(char g) {
 
 char getGameMode() {
     return gameMode;
+}
+
+int getMoveDepth(Board board) {
+    int count = c_counttoken(board);
+    if(count <= 8) return 1;
+    else if (count <= 16) return 2;
+    else return 3;
 }

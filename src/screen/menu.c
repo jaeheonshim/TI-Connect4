@@ -1,6 +1,7 @@
 #include <tice.h>
 #include <graphx.h>
 #include <keypadc.h>
+#include "include/connect.h"
 #include "include/tic4.h"
 #include "include/drawing.h"
 
