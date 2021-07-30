@@ -31,7 +31,7 @@ void intro_draw() {
     gfx_SetTextFGColor(74);
     gfx_SetColor(74);
     gfx_Line(0, 213, LCD_WIDTH, 213);
-    gfx_PrintStringXY("By: jaeheonshim", 78, 223);
+    gfx_PrintStringXY("github.com/jaeheonshim", 78, 223);
 }
 
 void intro_update(unsigned long delta) {
