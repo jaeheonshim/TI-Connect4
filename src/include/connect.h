@@ -8,6 +8,7 @@
 #define C_HEIGHT 6
 
 #define C_COLCHAR(color) (((color) == RED) ? 'X' : ((color) == YELLOW) ? 'O' : '*')
+#define otherPlayer(color) ((color) == RED ? YELLOW : RED)
 #define validpos(row, col) ((row) >= 0 && (row) < C_HEIGHT && (col) >= 0 && (col) < C_WIDTH)
 
 typedef char **Board;
@@ -23,3 +24,4 @@ void c_freeboard(Board board);
 int c_remove(Board board, int x);
 int c_lastplace(Board board, int col);
 int c_counttoken(Board board);
+int c_iswinningmove(Board board, int x);

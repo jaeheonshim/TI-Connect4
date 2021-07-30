@@ -90,7 +90,7 @@ void doMoveLogic() {
         }
         case PVAI: {
             if(c_nexttoken(board) != humanPlayer) {
-                int bestMove = c_findbestmove(board, getMoveDepth(board), humanPlayer * -1);
+                int bestMove = c_findbestmove(board, getMoveDepth(board), otherPlayer(humanPlayer));
                 c_place(board, bestMove);
                 lastPlace = bestMove;
             } else {

@@ -38,6 +38,7 @@ int c_findbestmove(Board board, int depth, int player) {
 
     for(int i = 0; i < C_WIDTH; i++) {
         pos = eval_order[i];
+        if(c_iswinningmove(board, pos)) return pos;
         if(c_canplace(board, pos)) {
             c_place(board, pos);
             int res = c_minimax(board, depth, 0, MINVAL, MAXVAL, player);

@@ -48,6 +48,16 @@ int c_place(Board board, int x) {
     return 0;
 }
 
+int c_iswinningmove(Board board, int x) {
+    int w;
+
+    c_place(board, x);
+    w = c_getwinner(board);
+    c_remove(board, x);
+
+    return w;
+}
+
 int c_remove(Board board, int x) {
     for(int i = 0; i < C_HEIGHT; i++) {
         if(board[i][x] != EMPTY) {
