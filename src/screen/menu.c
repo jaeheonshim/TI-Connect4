@@ -27,8 +27,8 @@ void menu_update(unsigned long delta) {
         game_init();
     } else if(digitInput == 2) {
         setGameMode(PVAI);
-        setScreen(&screen_game);
-        game_init();
+        while(getDigitInput() != -1) kb_Scan();
+        setScreen(&screen_cai);
     }
 }
 

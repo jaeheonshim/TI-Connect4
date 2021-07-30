@@ -13,6 +13,7 @@ static int lastPlace = -1;
 static int currentPlace = 0;
 
 static char gameMode = PVP;
+static char humanPlayer = RED;
 char game_winner = 0;
 
 int getDigitInput();
@@ -88,8 +89,8 @@ void doMoveLogic() {
             break;
         }
         case PVAI: {
-            if(c_nexttoken(board) == YELLOW) {
-                int bestMove = c_findbestmove(board, getMoveDepth(board), YELLOW);
+            if(c_nexttoken(board) != humanPlayer) {
+                int bestMove = c_findbestmove(board, getMoveDepth(board), humanPlayer * -1);
                 c_place(board, bestMove);
                 lastPlace = bestMove;
             } else {
@@ -102,7 +103,7 @@ void doMoveLogic() {
 
 void game_draw() {
     drawBoard(board, LCD_WIDTH / 2, LCD_HEIGHT / 2, 1, lastPlace);
-    if(game_winner == 0 && gameMode != AIVAI && (gameMode != PVAI || (gameMode == PVAI && c_nexttoken(board) != YELLOW)))
+    if(game_winner == 0 && gameMode != AIVAI && (gameMode != PVAI || (gameMode == PVAI && c_nexttoken(board) == humanPlayer)))
         drawPlacer(LCD_WIDTH / 2, LCD_HEIGHT / 2, currentPlace, c_nexttoken(board), 1);
 
     if(game_winner != 0) {
@@ -112,6 +113,10 @@ void game_draw() {
 
 void setGameMode(char g) {
     gameMode = g;
+}
+
+void setHumanPlayer(char c) {
+    humanPlayer = c;
 }
 
 char getGameMode() {

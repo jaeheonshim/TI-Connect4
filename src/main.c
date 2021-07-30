@@ -35,6 +35,12 @@ struct screen screen_game = {
     game_update
 };
 
+struct screen screen_cai = {
+    cai_init,
+    cai_draw,
+    cai_update
+};
+
 static struct screen *currentScreen = &screen_intro;
 
 /* Main function, called first */
@@ -53,6 +59,7 @@ int main(void)
     screen_menu.init();
     screen_intro.init();
     screen_game.init();
+    screen_cai.init();
     
     lastTick = timer_Get(1);
 
