@@ -38,7 +38,7 @@ int c_findbestmove(Board board, int depth, int player) {
 
     for(int i = 0; i < C_WIDTH; i++) {
         pos = eval_order[i];
-        if(c_iswinningmove(board, pos)) return pos;
+        if(c_canplace(board, pos) && c_iswinningmove(board, pos)) return pos;
         if(c_canplace(board, pos)) {
             c_place(board, pos);
             int res = c_minimax(board, depth, 0, MINVAL, MAXVAL, player);
@@ -122,7 +122,7 @@ int c_evalpos(Board board, int evaluator) {
     for(row = C_HEIGHT - 1; row >= 0; row--) {
         found = 0;
         for(col = 0; col < C_WIDTH; col++) {
-            if(board[row][col] == EMPTY || (board[row][col] & (1 << 2))) continue;
+            if(board[row][col] == EMPTY) continue;
             color = board[row][col];
             found = 1;
 
@@ -132,7 +132,6 @@ int c_evalpos(Board board, int evaluator) {
                     tCol = col + transforms[t][1] * i;
                     
                     if(board[tRow][tCol] != color) break;
-                    board[tRow][tCol] |= (1 << 2);
                 }
 
                 netPts += (i - 1) * (color == evaluator ? 1 : -1);
@@ -140,12 +139,6 @@ int c_evalpos(Board board, int evaluator) {
         }
 
         if(!found) break;
-    }
-
-    for(row = 0; row < C_HEIGHT; row++) {
-        for(col = 0; col < C_WIDTH; col++) {
-            board[row][col] &= ~(1 << 2);
-        }
     }
 
     return netPts;
