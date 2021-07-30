@@ -89,7 +89,7 @@ void doMoveLogic() {
         }
         case PVAI: {
             if(c_nexttoken(board) == YELLOW) {
-                int bestMove = c_findbestmove(board, 3, YELLOW);
+                int bestMove = c_findbestmove(board, getMoveDepth(board), YELLOW);
                 c_place(board, bestMove);
                 lastPlace = bestMove;
             } else {
@@ -120,7 +120,7 @@ char getGameMode() {
 
 int getMoveDepth(Board board) {
     int count = c_counttoken(board);
-    if(count <= 8) return 1;
-    else if (count <= 16) return 2;
-    else return 3;
+    if(count <= 6) return 2;
+    else if (count <= 20) return 3;
+    else return 4;
 }
