@@ -21,3 +21,5 @@ void cai_update(unsigned long);
 
 void game_over_init();
 void draw_game_over();
+
+void draw_debug();

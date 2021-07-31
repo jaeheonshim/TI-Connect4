@@ -26,8 +26,10 @@ static const char eval_order[7] = {
 int placeable(Board board, int row, int col, int color);
 
 static int d_heuristic = 0;
+struct debugframe debug;
 
 int c_findbestmove(Board board, int depth, int player) {
+    debug.depth = depth;
     dbg_printf("Finding best move: Depth: %d, Player: %c\n", depth, C_COLCHAR(player));
     d_heuristic = 0;
 
@@ -49,6 +51,7 @@ int c_findbestmove(Board board, int depth, int player) {
         if(c_canplace(board, pos)) {
             c_place(board, pos);
             int res = c_minimax(board, depth, 0, MINVAL, MAXVAL, player);
+            debug.poseval[pos] = res;
             c_remove(board, pos);
             if(res > maxVal) {
                 bestCol = pos;
@@ -57,6 +60,7 @@ int c_findbestmove(Board board, int depth, int player) {
         }
     }
 
+    debug.heuristic_count = d_heuristic;
     dbg_printf("Found best move: %d. Heuristic function called %d times\n", bestCol, d_heuristic);
 
     return bestCol;
@@ -122,29 +126,6 @@ int c_evalpos(Board board, int evaluator) {
         if(winner == evaluator) return MAXVAL;
         else return MINVAL;
     }
-
-    int color;
-    int row, col, found;
-    
-    for(row = 0; row < C_HEIGHT; row++) {
-        found = 0;
-        for(col = 0; col < C_WIDTH; col++) {
-            if(board[row][col] == EMPTY) continue;
-            color = board[row][col];
-            found = 1;
-
-            int pts = CALCPTS(color, evaluator);
-
-            if(CHECKLOCS(board, row, col, row, col + 1, row, col + 2, row, col + 3)) netPts += pts;
-            if(CHECKLOCS(board, row, col, row + 1, col, row + 2, col, row + 3, col)) netPts += pts;
-            if(CHECKLOCS(board, row, col, row + 1, col + 1, row + 2, col + 2, row + 3, col + 3)) netPts += pts;
-            if(CHECKLOCS(board, row, col, row + 1, col - 1, row + 2, col - 2, row + 3, col - 3)) netPts += pts;
-        }
-
-        if(!found) break;
-    }
-
-    return netPts;
 }
 
 int placeable(Board board, int row, int col, int color) {

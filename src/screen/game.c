@@ -109,6 +109,10 @@ void game_draw() {
     if(game_winner != 0) {
         draw_game_over();
     }
+
+    if(gameMode == PVAI) {
+        draw_debug();
+    }
 }
 
 void setGameMode(char g) {
