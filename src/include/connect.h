@@ -19,6 +19,19 @@
     board[r1][c1] != 0 && \
     board[r1][c1] == board[r2][c2] && board[r2][c2] == board[r3][c3] && board[r3][c3] == board[r4][c4])
 
+#define CHECKLOCS3(board, r1, c1, r2, c2, r3, c3) ( \
+    validpos((r1), (c1)) && \
+    validpos((r2), (c2)) && \
+    validpos((r3), (c3)) && \
+    board[r1][c1] != 0 && \
+    board[r1][c1] == board[r2][c2] && board[r2][c2] == board[r3][c3])
+
+#define CHECKLOCS2(board, r1, c1, r2, c2) ( \
+    validpos((r1), (c1)) && \
+    validpos((r2), (c2)) && \
+    board[r1][c1] != 0 && \
+    board[r1][c1] == board[r2][c2])
+
 typedef char **Board;
 
 Board c_newboard();

@@ -126,6 +126,34 @@ int c_evalpos(Board board, int evaluator) {
         if(winner == evaluator) return MAXVAL;
         else return MINVAL;
     }
+
+    int color;
+    int row, col, found;
+    
+    for(row = 0; row < C_HEIGHT; row++) {
+        found = 0;
+        for(col = 0; col < C_WIDTH; col++) {
+            if(board[row][col] == EMPTY) continue;
+            color = board[row][col];
+            found = 1;
+
+            int pts = CALCPTS(color, evaluator);
+
+            if(CHECKLOCS(board, row, col, row, col + 1, row, col + 2, row, col + 3)) netPts += pts * 3;
+            if(CHECKLOCS(board, row, col, row + 1, col, row + 2, col, row + 3, col)) netPts += pts * 3;
+            if(CHECKLOCS(board, row, col, row + 1, col + 1, row + 2, col + 2, row + 3, col + 3)) netPts += pts * 3;
+            if(CHECKLOCS(board, row, col, row + 1, col - 1, row + 2, col - 2, row + 3, col - 3)) netPts += pts * 3;
+
+            if(CHECKLOCS3(board, row, col, row, col + 1, row, col + 2)) netPts += pts * 2;
+            if(CHECKLOCS3(board, row, col, row + 1, col, row + 2, col)) netPts += pts * 2;
+            if(CHECKLOCS3(board, row, col, row + 1, col + 1, row + 2, col + 2)) netPts += pts * 2;
+            if(CHECKLOCS3(board, row, col, row + 1, col - 1, row + 2, col - 2)) netPts += pts * 2;
+        }
+
+        if(!found) break;
+    }
+
+    return netPts;
 }
 
 int placeable(Board board, int row, int col, int color) {
