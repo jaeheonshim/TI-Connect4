@@ -4,13 +4,13 @@
 #include "include/connect.h"
 #include "include/connectai.h"
 
-#define TRANSFORM_COUNT (sizeof transforms / (sizeof(int) * 2))
-
 #define MAXVAL 1000
 #define MINVAL -1000
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) > (b) ? (b) : (a))
+
+#define CALCPTS(col, evaluator) ((col) == (evaluator) ? 1 : -1)
 
 static const int transforms[][2] = {
     {0, -1},
@@ -33,7 +33,6 @@ int c_findbestmove(Board board, int depth, int player) {
 
     int bestCol = 0;
     int maxVal = MINVAL;
-    int mid = C_WIDTH / 2;
     int pos;
 
     for(int i = 0; i < C_WIDTH; i++) {
@@ -116,26 +115,22 @@ int c_evalpos(Board board, int evaluator) {
         else return MINVAL;
     }
 
-    int tRow, tCol, i, color;
-    int row, col, t, found;
+    int color;
+    int row, col, found;
     
-    for(row = C_HEIGHT - 1; row >= 0; row--) {
+    for(row = 0; row < C_HEIGHT; row++) {
         found = 0;
         for(col = 0; col < C_WIDTH; col++) {
             if(board[row][col] == EMPTY) continue;
             color = board[row][col];
             found = 1;
 
-            for(t = 0; t < TRANSFORM_COUNT; t++) {
-                for(i = 1; i < 4; i++) {
-                    tRow = row + transforms[t][0] * i;
-                    tCol = col + transforms[t][1] * i;
-                    
-                    if(board[tRow][tCol] != color) break;
-                }
+            int pts = CALCPTS(color, evaluator);
 
-                netPts += (i - 1) * (color == evaluator ? 1 : -1);
-            }
+            if(CHECKLOCS(board, row, col, row, col + 1, row, col + 2, row, col + 3)) netPts += pts;
+            if(CHECKLOCS(board, row, col, row + 1, col, row + 2, col, row + 3, col)) netPts += pts;
+            if(CHECKLOCS(board, row, col, row + 1, col + 1, row + 2, col + 2, row + 3, col + 3)) netPts += pts;
+            if(CHECKLOCS(board, row, col, row + 1, col - 1, row + 2, col - 2, row + 3, col - 3)) netPts += pts;
         }
 
         if(!found) break;

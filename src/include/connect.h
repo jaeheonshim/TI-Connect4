@@ -11,6 +11,14 @@
 #define otherPlayer(color) ((color) == RED ? YELLOW : RED)
 #define validpos(row, col) ((row) >= 0 && (row) < C_HEIGHT && (col) >= 0 && (col) < C_WIDTH)
 
+#define CHECKLOCS(board, r1, c1, r2, c2, r3, c3, r4, c4) ( \
+    validpos((r1), (c1)) && \
+    validpos((r2), (c2)) && \
+    validpos((r3), (c3)) && \
+    validpos((r4), (c4)) && \
+    board[r1][c1] != 0 && \
+    board[r1][c1] == board[r2][c2] && board[r2][c2] == board[r3][c3] && board[r3][c3] == board[r4][c4])
+
 typedef char **Board;
 
 Board c_newboard();

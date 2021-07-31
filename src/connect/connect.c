@@ -5,14 +5,6 @@
 #include "include/connect.h"
 
 #define FINDWIN(a, b) ((a) > (b) ? (a) : (b))
-#define TRANSFORM_COUNT (sizeof transforms / (sizeof(int) * 2))
-
-static const int transforms[][2] = {
-    {0, 1},
-    {1, 0},
-    {-1, 1},
-    {1, 1}
-};
 
 Board c_newboard() {
     Board board = (char **) malloc(sizeof(char *) * C_HEIGHT);
@@ -82,8 +74,7 @@ int c_lastplace(Board board, int col) {
 }
 
 int c_getwinner(Board board) {
-    int i, found, row, col, color, tRow, tCol, t;
-    int avg;
+    int i, row, col, color;
     for(i = 0; i < C_WIDTH; i++) {
         if(c_canplace(board, i)) break;
     }
@@ -96,21 +87,11 @@ int c_getwinner(Board board) {
 
             color = board[row][col];
 
-            for(t = 0; t < TRANSFORM_COUNT; t++) {
-                for(i = 1; i < 4; i++) {
-                    tRow = row + transforms[t][0] * i;
-                    tCol = col + transforms[t][1] * i;
-
-                    if(validpos(tRow, tCol)) {
-                        if(board[tRow][tCol] != color) {
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-
-                if(i == 4) return color;
+            if(CHECKLOCS(board, row, col, row, col + 1, row, col + 2, row, col + 3) || 
+                CHECKLOCS(board, row, col, row + 1, col, row + 2, col, row + 3, col) || 
+                CHECKLOCS(board, row, col, row + 1, col + 1, row + 2, col + 2, row + 3, col + 3) ||
+                CHECKLOCS(board, row, col, row + 1, col - 1, row + 2, col - 2, row + 3, col - 3)) {
+                return color;
             }
         }
     }
